@@ -9,12 +9,16 @@ let voting = 1;
 let maxVoting = 25;
 //constucter
 let product = [];
+let productsNames=[];
+let votes=[];
+let showes=[];
 function ProductImage(pImg) {
   this.pName = pImg.split('.')[0];
   this.img = 'img/' + pImg;
   this.show = 0;
   this.clicked = 0;
   product.push(this);
+  productsNames.push(this.pName);
 }
 
 //creating obj's
@@ -134,7 +138,60 @@ function viewResults(){
     let liEl = document.createElement('li');
     // liEl.textContent = `${product[i].img} ${product[i].pName} had ${product[i].clicked} votes and was seen ${product[i].show} times .`;
     liEl.innerHTML='<img src=\''+product[i].img+'\'>  '+product[i].pName+' had  '+product[i].clicked + ' votes and was seen  '+ product[i].show+' times . ';
+    votes.push(product[i].clicked);
+    showes.push(product[i].show);
     ulEl.appendChild(liEl);
   }
   containerEl.appendChild(ulEl);
+  buttonProductEl.removeEventListener('click',random3img);
+  buttonResultsEl.removeEventListener('click',viewResults);
+  chartRender();
 }
+
+
+// let votes=[];
+// let showes=[];
+// for(let i=0;i<product.length;i++){
+//   votes.push(product[i].clicked);
+//   showes.push(product[i].show);
+// }
+
+function chartRender() {
+  let ctx = document.getElementById('myChart').getContext('2d');
+  let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: productsNames,
+      datasets: [{
+        label: '# of Votes',
+        data: votes,
+        backgroundColor: [
+          'rgba(32, 3, 46,1.0)',
+        ],
+        borderColor: [
+          'rgba(32, 3, 46,1.0)',
+        ],
+        borderWidth: 2
+      },
+      {
+        label: '# of views',
+        data: showes,
+        backgroundColor: [
+          'rgba(255, 255, 255, 1.0)',
+        ],
+        borderColor: [
+         'rgba(32, 3, 46,1.0)',
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
