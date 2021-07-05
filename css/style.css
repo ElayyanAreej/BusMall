@@ -8,9 +8,7 @@ img{
 }
 img:hover{
   border: 5px solid rgb(132, 30, 179);
-  
 }
-
 h1{
   font-size:34px;
   text-align: center;
@@ -39,7 +37,7 @@ ul{
   text-align: justify;
   margin: 20px;
   font-family: 'Josefin Slab', serif;
-}
+ }
 
 ul img{
   width: 40px;

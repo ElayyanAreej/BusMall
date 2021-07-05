@@ -42,13 +42,20 @@ let img1;
 let img2;
 let img3;
 
+
+let prevInd=[-1,-1,-1];
 function random3img() {
   do {
     img1 = randomIndex();
     img2 = randomIndex();
     img3 = randomIndex();
-  } while (img1 === img2 || img2 === img3 || img1 === img3);
+  } while (img1 === img2 || img2 === img3 || img1 === img3 || img1=== prevInd[0] || img1=== prevInd[1] || img1=== prevInd[2]|| img2=== prevInd[0] || img2=== prevInd[1] || img2=== prevInd[2] || img3=== prevInd[0] || img3=== prevInd[1] || img3=== prevInd[2]);
 
+  prevInd[0]=img1;
+  prevInd[1]=img2;
+  prevInd[2]=img3;
+
+ console.log(prevInd);
   img1El.setAttribute('id', 'img1');
   img2El.setAttribute('id', 'img2');
   img3El.setAttribute('id', 'img3');
@@ -180,7 +187,7 @@ function chartRender() {
           'rgba(255, 255, 255, 1.0)',
         ],
         borderColor: [
-         'rgba(32, 3, 46,1.0)',
+          'rgba(32, 3, 46,1.0)',
         ],
         borderWidth: 2
       }]
