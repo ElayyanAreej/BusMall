@@ -3,34 +3,39 @@
 // Name of the product
 // File path of image
 // Times the image has been shown
+
 let pImg = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg'];
 
 let voting = 1;
 let maxVoting = 25;
-//constucter
-let product = [];
+ProductImage.product = [];
 let productsNames=[];
 let votes=[];
 let showes=[];
+let Result=[];
+
+
 function ProductImage(pImg) {
   this.pName = pImg.split('.')[0];
   this.img = 'img/' + pImg;
   this.show = 0;
   this.clicked = 0;
-  product.push(this);
+  ProductImage.product.push(this);
   productsNames.push(this.pName);
 }
 
 //creating obj's
-for (let i = 0; i < pImg.length; i++) {
-  new ProductImage(pImg[i]);
-}
-console.log(product);
+// for (let i = 0; i < pImg.length; i++) {
+//   new ProductImage(pImg[i]);
+// }
+// console.log(ProductImage.product);
 
 // Create an algorithm that will randomly generate three unique product images from the images directory and display them side-by-side-by-side in the browser window.
 
+readFromLocal();
+console.log(ProductImage.product);
 function randomIndex() {
-  return Math.floor(Math.random() * product.length);
+  return Math.floor(Math.random() * ProductImage.product.length);
 }
 
 let containerEl = document.getElementById('container');
@@ -55,27 +60,25 @@ function random3img() {
   prevInd[1]=img2;
   prevInd[2]=img3;
 
- console.log(prevInd);
+  console.log(prevInd);
   img1El.setAttribute('id', 'img1');
   img2El.setAttribute('id', 'img2');
   img3El.setAttribute('id', 'img3');
-  img1El.setAttribute('src', product[img1].img);
-  img2El.setAttribute('src', product[img2].img);
-  img3El.setAttribute('src', product[img3].img);
-  img1El.setAttribute('title', product[img1].pName);
-  img2El.setAttribute('title', product[img2].pName);
-  img3El.setAttribute('title', product[img3].pName);
+  img1El.setAttribute('src', ProductImage.product[img1].img);
+  img2El.setAttribute('src', ProductImage.product[img2].img);
+  img3El.setAttribute('src', ProductImage.product[img3].img);
+  img1El.setAttribute('title', ProductImage.product[img1].pName);
+  img2El.setAttribute('title', ProductImage.product[img2].pName);
+  img3El.setAttribute('title', ProductImage.product[img3].pName);
   containerEl.appendChild(img1El);
   containerEl.appendChild(img2El);
   containerEl.appendChild(img3El);
   //For each of the three images, increment its property of times it has been shown by one.
-  product[img1].show++;
-  product[img2].show++;
-  product[img3].show++;
-
-
+  ProductImage.product[img1].show++;
+  ProductImage.product[img2].show++;
+  ProductImage.product[img3].show++;
 }
-console.log(product);
+console.log(ProductImage.product);
 
 // Attach an event listener to the section of the HTML page where the images are going to be displayed.
 // Once the users ‘clicks’ a product, generate three new products for the user to pick from.
@@ -97,17 +100,17 @@ function clickedImg(event) {
     console.log(clickedImg);
 
     if (clickedImg === 'img1') {
-      product[img1].clicked++;
+      ProductImage.product[img1].clicked++;
       random3img();
 
     }
     if (clickedImg === 'img2') {
-      product[img2].clicked++;
+      ProductImage.product[img2].clicked++;
       random3img();
 
     }
     if (clickedImg === 'img3') {
-      product[img3].clicked++;
+      ProductImage.product[img3].clicked++;
       random3img();
     }
     voting++;
@@ -119,9 +122,10 @@ function clickedImg(event) {
     img3.removeEventListener('click', clickedImg);
 
   }
+
 }
 
-console.log(product);
+console.log(ProductImage.product);
 
 
 // As a user, I would like to control the number of rounds a user is presented with so that I can control the voting session duration.
@@ -141,18 +145,22 @@ buttonResultsEl.addEventListener('click', viewResults);
 
 function viewResults(){
   let ulEl=document.createElement('ul');
-  for (let i = 0; i < product.length; i++) {
+  for (let i = 0; i < ProductImage.product.length; i++) {
     let liEl = document.createElement('li');
     // liEl.textContent = `${product[i].img} ${product[i].pName} had ${product[i].clicked} votes and was seen ${product[i].show} times .`;
-    liEl.innerHTML='<img src=\''+product[i].img+'\'>  '+product[i].pName+' had  '+product[i].clicked + ' votes and was seen  '+ product[i].show+' times . ';
-    votes.push(product[i].clicked);
-    showes.push(product[i].show);
+    liEl.innerHTML='<img src=\''+ProductImage.product[i].img+'\'>  '+ProductImage.product[i].pName+' had  '+ProductImage.product[i].clicked + ' votes and was seen  '+ ProductImage.product[i].show+' times . ';
+    votes.push(ProductImage.product[i].clicked);
+    showes.push(ProductImage.product[i].show);
+    productsNames.push(ProductImage.product[i].pName);
     ulEl.appendChild(liEl);
   }
   containerEl.appendChild(ulEl);
   buttonProductEl.removeEventListener('click',random3img);
   buttonResultsEl.removeEventListener('click',viewResults);
+  Result=ProductImage.product;
+  saveToLocalStorage();
   chartRender();
+
 }
 
 
@@ -165,6 +173,10 @@ function viewResults(){
 
 function chartRender() {
   let ctx = document.getElementById('myChart').getContext('2d');
+  console.log(productsNames);
+  console.log(votes);
+  console.log(showes);
+
   let myChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -202,3 +214,23 @@ function chartRender() {
   });
 }
 
+function saveToLocalStorage() {
+  let data = JSON.stringify(Result);
+  localStorage.setItem('products', data);
+}
+
+
+function readFromLocal(){
+  let dataLocal= localStorage.getItem('products');
+  console.log(dataLocal);
+  let localProduct=JSON.parse(dataLocal);
+  if(localProduct!== null){
+    ProductImage.product=localProduct;
+    // viewResults();
+  }
+  else{
+    for (let i = 0; i < pImg.length; i++) {
+    new ProductImage(pImg[i]);}
+    console.log(ProductImage.product);
+  }
+}
